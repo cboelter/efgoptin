@@ -82,6 +82,8 @@ class ModuleEfgOptIn extends Module
 										$this->Database->prepare("UPDATE tl_formdata_details %s Where pid = ? AND ff_name = ?")->set($arrSet)->execute($objFormData->pid, $objForm->optinFeedbackField);
 
 										$this->redirectToFrontendPage($objForm->optinJumpTo);
+								} else {
+										$this->redirectToFrontendPage($objForm->optinJumpToError);
 								}
 						}
 				}

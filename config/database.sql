@@ -20,5 +20,6 @@ CREATE TABLE `tl_form` (
   `optinTokenField` varchar(32) NOT NULL default '',
   `optinFeedbackField` varchar(32) NOT NULL default '',
   `optinJumpTo` int(10) NOT NULL default '0',
+  `optinJumpToError` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

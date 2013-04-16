@@ -44,8 +44,9 @@ class EfgOptIn extends Frontend {
 		public function addOptInLink($arrSubmitted, $arrFiles, $intOldId, &$arrForm) {
 
 				if($arrForm['optin'] && $arrForm['optinTokenField'] != '') {
+						global $objPage;
 
-						$strRequest = ampersand($this->Environment->url);
+						$strRequest = ampersand($this->Environment->base . $this->generateFrontendUrl($objPage->row()));
 						$strToken = md5(microtime() * rand(0,999));
 						$paramString = 'form=' . $arrForm['id'] . '&token=' . $strToken;
 

@@ -39,7 +39,7 @@ $GLOBALS['TL_DCA']['tl_form']['palettes']['__selector__'][] = 'optin';
 $GLOBALS['TL_DCA']['tl_form']['subpalettes']['sendConfirmationMail'] =  str_replace('addConfirmationMailAttachments','addConfirmationMailAttachments,optin', $GLOBALS['TL_DCA']['tl_form']['subpalettes']['sendConfirmationMail']);
 
 array_insert($GLOBALS['TL_DCA']['tl_form']['subpalettes'], count($GLOBALS['TL_DCA']['tl_form']['subpalettes']),
-		array('optin' => 'optinLinkField,optinTokenField,optinFeedbackField,optinJumpTo')
+		array('optin' => 'optinLinkField,optinTokenField,optinFeedbackField,optinJumpTo,optinJumpToError')
 );
 
 /**
@@ -87,6 +87,14 @@ $GLOBALS['TL_DCA']['tl_form']['fields']['optinFeedbackField'] = array
 $GLOBALS['TL_DCA']['tl_form']['fields']['optinJumpTo'] = array
 (
 		'label'                   => &$GLOBALS['TL_LANG']['tl_form']['optinJumpTo'],
+		'exclude'                 => true,
+		'inputType'               => 'pageTree',
+		'eval'                    => array('fieldType'=>'radio', 'tl_class'=>'clr')
+);
+
+$GLOBALS['TL_DCA']['tl_form']['fields']['optinJumpToError'] = array
+(
+		'label'                   => &$GLOBALS['TL_LANG']['tl_form']['optinJumpToError'],
 		'exclude'                 => true,
 		'inputType'               => 'pageTree',
 		'eval'                    => array('fieldType'=>'radio', 'tl_class'=>'clr')

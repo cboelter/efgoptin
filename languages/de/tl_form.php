@@ -33,5 +33,6 @@ $GLOBALS['TL_LANG']['tl_form']['optinLinkField'] = array('Link-Feld','Hiddenfiel
 $GLOBALS['TL_LANG']['tl_form']['optinTokenField'] = array('Token-Feld','Hiddenfield in dem der Token für das Double Opt-In gespeichert wird');
 $GLOBALS['TL_LANG']['tl_form']['optinFeedbackField'] = array('Feedback-Feld','Hiddenfield in dem das Feedback für das Double Opt-In gespeichert wird');
 $GLOBALS['TL_LANG']['tl_form']['optinJumpTo'] = array('Weiterleitung','Zielseite für erfolgreichen Double Opt-In');
+$GLOBALS['TL_LANG']['tl_form']['optinJumpTo'] = array('Weiterleitung Fehlerseite','Zielseite für fehlgeschlagenen Double Opt-In');
 
 ?>
