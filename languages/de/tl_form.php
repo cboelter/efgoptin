@@ -29,10 +29,15 @@
  */
 
 $GLOBALS['TL_LANG']['tl_form']['optin'] = array('Double Opt-In');
-$GLOBALS['TL_LANG']['tl_form']['optinLinkField'] = array('Link-Feld','Hiddenfield in dem der Link für das Double Opt-In gespeichert wird');
+$GLOBALS['TL_LANG']['tl_form']['optinEmailField'] = array('Double Opt-In Empfängerfeld','');
+$GLOBALS['TL_LANG']['tl_form']['optinEmailSender'] = array('Double Opt-In Absender','');
+$GLOBALS['TL_LANG']['tl_form']['optinEmailReply'] = array('Double Opt-In Antwort-Adresse','');
+$GLOBALS['TL_LANG']['tl_form']['optinEmailSubject'] = array('Double Opt-In Betreff','');
+$GLOBALS['TL_LANG']['tl_form']['optinEmailText'] = array('Double Opt-In Text','');
 $GLOBALS['TL_LANG']['tl_form']['optinTokenField'] = array('Token-Feld','Hiddenfield in dem der Token für das Double Opt-In gespeichert wird');
 $GLOBALS['TL_LANG']['tl_form']['optinFeedbackField'] = array('Feedback-Feld','Hiddenfield in dem das Feedback für das Double Opt-In gespeichert wird');
 $GLOBALS['TL_LANG']['tl_form']['optinJumpTo'] = array('Weiterleitung','Zielseite für erfolgreichen Double Opt-In');
 $GLOBALS['TL_LANG']['tl_form']['optinJumpToError'] = array('Weiterleitung Fehlerseite','Zielseite für fehlgeschlagenen Double Opt-In');
-
+$GLOBALS['TL_LANG']['tl_form']['optinCondition'] = array('Double Opt-In Bedingung', '');
+$GLOBALS['TL_LANG']['tl_form']['optinConditionField'] = array('Double Opt-In Bedingungsfeld', 'Das Feld an das das Double-Opt-In gebunden ist. (funktioniert nur mit checkboxen)');
 ?>

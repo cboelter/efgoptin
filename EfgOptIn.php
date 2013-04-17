@@ -43,18 +43,41 @@ class EfgOptIn extends Frontend {
 		 */
 		public function addOptInLink($arrSubmitted, $arrFiles, $intOldId, &$arrForm) {
 
-				if($arrForm['optin'] && $arrForm['optinTokenField'] != '') {
-						global $objPage;
+				if($arrForm['optin'] && $arrForm['optinTokenField'] != '' && $arrForm['storeFormdata']) {
 
-						$strRequest = ampersand($this->Environment->base . $this->generateFrontendUrl($objPage->row()));
-						$strToken = md5(microtime() * rand(0,999));
-						$paramString = 'form=' . $arrForm['id'] . '&token=' . $strToken;
+						if($arrForm['optinCondition'] && ($arrSubmitted[$arrForm['optinConditionField']] == '0' || $arrSubmitted[$arrForm['optinConditionField']] == ''))
+								return $arrSubmitted;
 
-						$arrSubmitted[$arrForm['optinLinkField']] = $strRequest . (strpos('?', $strRequest) ? $paramString . '&' : '?' . $paramString);
-						$arrSubmitted[$arrForm['optinTokenField']] = $strToken;
-						$arrSubmitted[$arrForm['optinFeedbackField']] = '0';
+						$arrSubmitted = $this->sendOptinEmail($arrSubmitted, $arrForm);
+
 				}
 
+				return $arrSubmitted;
+		}
+
+		private function sendOptinEmail($arrSubmitted, $arrForm) {
+				$arrData = $arrSubmitted;
+				unset($arrData['FORM_SUBMIT'], $arrData['MAX_FILE_SIZE']);
+
+				if($arrSubmitted[$arrForm['optinEmailField']]) {
+
+						global $objPage;
+						$strUrl = $this->Environment->base . $this->generateFrontendUrl($objPage->row());
+
+						$strToken = md5(microtime() * rand(0,999));
+						$paramString = '?form=' . $arrForm['id'] . '&token=' . $strToken;
+
+						$arrData['optinurl'] = $strUrl . $paramString;
+						$strText = $this->parseSimpleTokens($arrForm['optinEmailText'], $arrData);
+						$strSubject = $this->parseSimpleTokens($arrForm['optinEmailSubject'], $arrData);
+
+						$objEmail = new Email();
+						$objEmail->subject = $strSubject;
+						$objEmail->text = $strText;
+						$objEmail->sendTo($arrSubmitted[$arrForm['optinEmailField']]);
+				}
+
+				$arrSubmitted[$arrForm['optinTokenField']] = $strToken;
 				return $arrSubmitted;
 		}
 }

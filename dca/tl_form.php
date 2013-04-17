@@ -32,14 +32,17 @@
  * Palettes
  */
 $GLOBALS['TL_DCA']['tl_form']['palettes']['__selector__'][] = 'optin';
+$GLOBALS['TL_DCA']['tl_form']['palettes']['__selector__'][] = 'optinCondition';
 
 /**
  * Subalettes
  */
-$GLOBALS['TL_DCA']['tl_form']['subpalettes']['sendConfirmationMail'] =  str_replace('addConfirmationMailAttachments','addConfirmationMailAttachments,optin', $GLOBALS['TL_DCA']['tl_form']['subpalettes']['sendConfirmationMail']);
+$GLOBALS['TL_DCA']['tl_form']['palettes']['default'] =  str_replace('storeFormdata','storeFormdata,optin', $GLOBALS['TL_DCA']['tl_form']['palettes']['default']);
 
 array_insert($GLOBALS['TL_DCA']['tl_form']['subpalettes'], count($GLOBALS['TL_DCA']['tl_form']['subpalettes']),
-		array('optin' => 'optinLinkField,optinTokenField,optinFeedbackField,optinJumpTo,optinJumpToError')
+		array('optin' => 'optinEmailField,optinEmailSender,optinEmailReply,optinEmailSubject,optinEmailText,optinTokenField,optinFeedbackField,optinJumpTo,optinJumpToError,optinCondition',
+					'optinCondition' => 'optinConditionField'
+		)
 );
 
 /**
@@ -54,14 +57,46 @@ $GLOBALS['TL_DCA']['tl_form']['fields']['optin'] = array
 		'eval'										=> array('submitOnChange' => true)
 );
 
-$GLOBALS['TL_DCA']['tl_form']['fields']['optinLinkField'] = array
+$GLOBALS['TL_DCA']['tl_form']['fields']['optinEmailField'] = array
 (
-		'label'                   => &$GLOBALS['TL_LANG']['tl_form']['optinLinkField'],
+		'label'                   => &$GLOBALS['TL_LANG']['tl_form']['optinEmailField'],
 		'exclude'                 => true,
 		'filter'                  => false,
 		'inputType'               => 'select',
 		'options_callback'				=> array('tl_form_efg_optin', 'getFormFields'),
 		'eval'                    => array('chosen'=>true, 'mandatory'=>true, 'tl_class'=>'w50')
+);
+
+$GLOBALS['TL_DCA']['tl_form']['fields']['optinEmailSender'] = array
+(
+		'label'                   => &$GLOBALS['TL_LANG']['tl_form']['optinEmailSender'],
+		'exclude'                 => true,
+		'inputType'               => 'text',
+		'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50')
+);
+
+$GLOBALS['TL_DCA']['tl_form']['fields']['optinEmailReply'] = array
+(
+		'label'                   => &$GLOBALS['TL_LANG']['tl_form']['optinEmailReply'],
+		'exclude'                 => true,
+		'inputType'               => 'text',
+		'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50')
+);
+
+$GLOBALS['TL_DCA']['tl_form']['fields']['optinEmailSubject'] = array
+(
+		'label'                   => &$GLOBALS['TL_LANG']['tl_form']['optinEmailSubject'],
+		'exclude'                 => true,
+		'inputType'               => 'text',
+		'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50', 'decodeEntities' => true)
+);
+
+$GLOBALS['TL_DCA']['tl_form']['fields']['optinEmailText'] = array
+(
+		'label'                   => &$GLOBALS['TL_LANG']['tl_form']['optinEmailText'],
+		'exclude'                 => true,
+		'inputType'               => 'textarea',
+		'eval'                    => array('mandatory'=>true, 'tl_class'=>'long', 'decodeEntities' => true)
 );
 
 $GLOBALS['TL_DCA']['tl_form']['fields']['optinTokenField'] = array
@@ -100,6 +135,25 @@ $GLOBALS['TL_DCA']['tl_form']['fields']['optinJumpToError'] = array
 		'eval'                    => array('fieldType'=>'radio', 'tl_class'=>'clr')
 );
 
+$GLOBALS['TL_DCA']['tl_form']['fields']['optinCondition'] = array
+(
+		'label'                   => &$GLOBALS['TL_LANG']['tl_form']['optinCondition'],
+		'exclude'                 => true,
+		'filter'                  => true,
+		'inputType'               => 'checkbox',
+		'eval'										=> array('submitOnChange' => true)
+);
+
+$GLOBALS['TL_DCA']['tl_form']['fields']['optinConditionField'] = array
+(
+		'label'                   => &$GLOBALS['TL_LANG']['tl_form']['optinConditionField'],
+		'exclude'                 => true,
+		'filter'                  => false,
+		'inputType'               => 'select',
+		'options_callback'				=> array('tl_form_efg_optin', 'getOptinConditionField'),
+		'eval'                    => array('chosen'=>true, 'mandatory'=>true, 'tl_class'=>'w50')
+);
+
 /**
  * Class tl_form_efg_optin
  */
@@ -112,6 +166,21 @@ class tl_form_efg_optin extends Backend {
 		 */
 		public function getFormFields(DataContainer $dc) {
 				$objFormField = $this->Database->prepare("SELECT name FROM tl_form_field Where pid = ?")->execute($dc->activeRecord->id);
+
+				$arrFields = array();
+				while($objFormField->next())
+						$arrFields[$objFormField->name] = $objFormField->name;
+
+				return $arrFields;
+		}
+
+		/**
+		 * load the form checkbox fields from the current form
+		 * @param DataContainer $dc
+		 * @return array
+		 */
+		public function getOptinConditionField(DataContainer $dc) {
+				$objFormField = $this->Database->prepare("SELECT name FROM tl_form_field Where pid = ? AND type = ?")->execute($dc->activeRecord->id, 'checkbox');
 
 				$arrFields = array();
 				while($objFormField->next())
