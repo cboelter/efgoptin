@@ -34,6 +34,7 @@ $GLOBALS['TL_LANG']['tl_form']['optinEmailSender'] = array('Double Opt-In Absend
 $GLOBALS['TL_LANG']['tl_form']['optinEmailReply'] = array('Double Opt-In Antwort-Adresse','');
 $GLOBALS['TL_LANG']['tl_form']['optinEmailSubject'] = array('Double Opt-In Betreff','');
 $GLOBALS['TL_LANG']['tl_form']['optinEmailText'] = array('Double Opt-In Text','');
+$GLOBALS['TL_LANG']['tl_form']['optinEmailTemplate'] = array('Double Opt-In Mail-Template','');
 $GLOBALS['TL_LANG']['tl_form']['optinTokenField'] = array('Token-Feld','Hiddenfield in dem der Token für das Double Opt-In gespeichert wird');
 $GLOBALS['TL_LANG']['tl_form']['optinFeedbackField'] = array('Feedback-Feld','Hiddenfield in dem das Feedback für das Double Opt-In gespeichert wird');
 $GLOBALS['TL_LANG']['tl_form']['optinJumpTo'] = array('Weiterleitung','Zielseite für erfolgreichen Double Opt-In');

@@ -55,6 +55,11 @@ class EfgOptIn extends Frontend {
 				return $arrSubmitted;
 		}
 
+		/**
+		 * @param $arrSubmitted
+		 * @param $arrForm
+		 * @return mixed
+		 */
 		private function sendOptinEmail($arrSubmitted, $arrForm) {
 				$arrData = $arrSubmitted;
 				unset($arrData['FORM_SUBMIT'], $arrData['MAX_FILE_SIZE']);
@@ -62,6 +67,7 @@ class EfgOptIn extends Frontend {
 				if($arrSubmitted[$arrForm['optinEmailField']]) {
 
 						global $objPage;
+						$objEmail = new Email();
 						$strUrl = $this->Environment->base . $this->generateFrontendUrl($objPage->row());
 
 						$strToken = md5(microtime() * rand(0,999));
@@ -71,7 +77,20 @@ class EfgOptIn extends Frontend {
 						$strText = $this->parseSimpleTokens($arrForm['optinEmailText'], $arrData);
 						$strSubject = $this->parseSimpleTokens($arrForm['optinEmailSubject'], $arrData);
 
-						$objEmail = new Email();
+						$mailTemplate = $arrForm['optinEmailTemplate'];
+						if ($mailTemplate != '')
+						{
+								$fileTemplate = new File($mailTemplate);
+
+								if ($fileTemplate->mime == 'text/html')
+								{
+										$strHtml = $fileTemplate->getContent();
+
+										$strHtml = $this->parseSimpleTokens($strHtml, $arrData);
+										$objEmail->html = $strHtml;
+								}
+						}
+
 						$objEmail->subject = $strSubject;
 						$objEmail->text = $strText;
 						$objEmail->sendTo($arrSubmitted[$arrForm['optinEmailField']]);

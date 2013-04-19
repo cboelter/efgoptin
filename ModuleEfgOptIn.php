@@ -85,6 +85,8 @@ class ModuleEfgOptIn extends Module
 								} else {
 										$this->redirectToFrontendPage($objForm->optinJumpToError);
 								}
+						} else {
+								$this->redirectToFrontendPage($objForm->optinJumpToError);
 						}
 				}
 

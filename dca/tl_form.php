@@ -40,7 +40,7 @@ $GLOBALS['TL_DCA']['tl_form']['palettes']['__selector__'][] = 'optinCondition';
 $GLOBALS['TL_DCA']['tl_form']['palettes']['default'] =  str_replace('storeFormdata','storeFormdata,optin', $GLOBALS['TL_DCA']['tl_form']['palettes']['default']);
 
 array_insert($GLOBALS['TL_DCA']['tl_form']['subpalettes'], count($GLOBALS['TL_DCA']['tl_form']['subpalettes']),
-		array('optin' => 'optinEmailField,optinEmailSender,optinEmailReply,optinEmailSubject,optinEmailText,optinTokenField,optinFeedbackField,optinJumpTo,optinJumpToError,optinCondition',
+		array('optin' => 'optinEmailField,optinEmailSender,optinEmailReply,optinEmailSubject,optinEmailText,optinEmailTemplate,optinTokenField,optinFeedbackField,optinJumpTo,optinJumpToError,optinCondition',
 					'optinCondition' => 'optinConditionField'
 		)
 );
@@ -97,6 +97,14 @@ $GLOBALS['TL_DCA']['tl_form']['fields']['optinEmailText'] = array
 		'exclude'                 => true,
 		'inputType'               => 'textarea',
 		'eval'                    => array('mandatory'=>true, 'tl_class'=>'long', 'decodeEntities' => true)
+);
+
+$GLOBALS['TL_DCA']['tl_form']['fields']['optinEmailTemplate'] = array
+(
+		'label'                   => &$GLOBALS['TL_LANG']['tl_form']['optinEmailTemplate'],
+		'exclude'                 => true,
+		'inputType'               => 'fileTree',
+		'eval'                    => array('helpwizard'=>false,'files'=>true, 'fieldType'=>'radio', 'extensions' => 'htm,html,xhtml,txt,tpl')
 );
 
 $GLOBALS['TL_DCA']['tl_form']['fields']['optinTokenField'] = array
