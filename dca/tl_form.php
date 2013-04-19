@@ -104,7 +104,7 @@ $GLOBALS['TL_DCA']['tl_form']['fields']['optinEmailTemplate'] = array
 		'label'                   => &$GLOBALS['TL_LANG']['tl_form']['optinEmailTemplate'],
 		'exclude'                 => true,
 		'inputType'               => 'fileTree',
-		'eval'                    => array('helpwizard'=>false,'files'=>true, 'fieldType'=>'radio', 'extensions' => 'htm,html,xhtml,txt,tpl')
+		'eval'                    => array('helpwizard'=>false,'files'=>true, 'fieldType'=>'radio', 'extensions' => 'htm,html,xhtml,txt,tpl', 'path' => $GLOBALS['TL_CONFIG']['uploadPath'] ? $GLOBALS['TL_CONFIG']['uploadPath'] : 'tl_files')
 );
 
 $GLOBALS['TL_DCA']['tl_form']['fields']['optinTokenField'] = array
