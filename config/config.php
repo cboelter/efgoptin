@@ -1,43 +1,31 @@
-<?php if (!defined('TL_ROOT')) die('You cannot access this file directly!');
+<?php
 
 /**
- * Contao Open Source CMS
- * Copyright (C) 2005-2013 Leo Feyer
+ * Contao Open Source CMS, Copyright (C) 2005-2016 Leo Feyer
  *
- * Formerly known as TYPOlight Open Source CMS.
+ * EfgOptin
  *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation, either
- * version 3 of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this program. If not, please visit the Free
- * Software Foundation website at <http://www.gnu.org/licenses/>.
- *
- * PHP version 5
- * @copyright  Christopher Bölter 2013
- * @author     Christopher Bölter <http://www.cogizz.de>
- * @package    efgoptin
+ * @copyright  Christopher Bölter 2016
+ * @author     Christopher Bölter
+ * @package    EfgOptin
  * @license    LGPL
  * @filesource
+ * @see        https://github.com/cboelter/efgoptin
  */
 
 /**
  * Hooks
  */
-$GLOBALS['TL_HOOKS']['processEfgFormData'][] = array('EfgOptIn', 'addOptInLink');
+$GLOBALS['TL_HOOKS']['processEfgFormData'][] = array('Cboelter\\EfgOptIn\\EfgOptIn', 'addOptInLink');
 
 /**
  * Frontend Modules
  */
-array_insert($GLOBALS['FE_MOD']['application'], count($GLOBALS['FE_MOD']['application']), array
-(
-		'efgoptin' => 'ModuleEfgOptIn'
-));
-?>
+array_insert(
+    $GLOBALS['FE_MOD']['application'],
+    count($GLOBALS['FE_MOD']['application']),
+    array
+    (
+        'efgoptin' => 'Cboelter\\EfgOptIn\\ModuleEfgOptIn'
+    )
+);
