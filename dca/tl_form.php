@@ -23,12 +23,12 @@ $GLOBALS['TL_DCA']['tl_form']['palettes']['__selector__'][] = 'optinCondition';
  * Subalettes
  */
 $GLOBALS['TL_DCA']['tl_form']['palettes']['default'] =
-    str_replace('storeValues', 'storeValues,optin', $GLOBALS['TL_DCA']['tl_form']['palettes']['default']);
+    str_replace('storeFormdata', 'storeFormdata,optin', $GLOBALS['TL_DCA']['tl_form']['palettes']['default']);
 array_insert(
     $GLOBALS['TL_DCA']['tl_form']['subpalettes'],
     count($GLOBALS['TL_DCA']['tl_form']['subpalettes']),
     array(
-        'optin'          => 'optinEmailField,optinEmailSender,optinEmailReply,optinEmailSubject,optinEmailText,optinEmailTemplate,optinTokenField,optinFeedbackField,optinFeedbackTimeField,optinJumpTo,optinJumpToError,optinCondition',
+        'optin'          => 'optinEmailField,optinEmailSender,optinEmailReply,optinEmailSubject,optinEmailText,optinEmailTemplate,optinTokenField,optinFeedbackField,optinFeedbackTimeField,optinSuccessMessage,optinJumpTo,optinErrorMessage,optinJumpToError,optinCondition',
         'optinCondition' => 'optinConditionField'
     )
 );
@@ -150,6 +150,15 @@ $GLOBALS['TL_DCA']['tl_form']['fields']['optinJumpTo'] = array
     'sql'       => "int(10) NOT NULL default '0'"
 );
 
+$GLOBALS['TL_DCA']['tl_form']['fields']['optinSuccessMessage'] = array
+(
+    'label'     => &$GLOBALS['TL_LANG']['tl_form']['optinSuccessMessage'],
+    'exclude'   => true,
+    'inputType' => 'textarea',
+    'eval'      => array('tl_class' => 'clr long'),
+    'sql'       => "text NOT NULL"
+);
+
 $GLOBALS['TL_DCA']['tl_form']['fields']['optinJumpToError'] = array
 (
     'label'     => &$GLOBALS['TL_LANG']['tl_form']['optinJumpToError'],
@@ -157,6 +166,15 @@ $GLOBALS['TL_DCA']['tl_form']['fields']['optinJumpToError'] = array
     'inputType' => 'pageTree',
     'eval'      => array('fieldType' => 'radio', 'tl_class' => 'clr'),
     'sql'       => "int(10) NOT NULL default '0'"
+);
+
+$GLOBALS['TL_DCA']['tl_form']['fields']['optinErrorMessage'] = array
+(
+    'label'     => &$GLOBALS['TL_LANG']['tl_form']['optinErrorMessage'],
+    'exclude'   => true,
+    'inputType' => 'textarea',
+    'eval'      => array('tl_class' => 'long'),
+    'sql'       => "text NOT NULL"
 );
 
 $GLOBALS['TL_DCA']['tl_form']['fields']['optinCondition'] = array

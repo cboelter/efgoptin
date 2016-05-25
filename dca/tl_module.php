@@ -16,4 +16,5 @@
 /**
  * Add palettes to tl_module
  */
-$GLOBALS['TL_DCA']['tl_module']['palettes']['efgoptin'] = '{title_legend},name,type;';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['efgoptin'] =
+    '{title_legend},name,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests';

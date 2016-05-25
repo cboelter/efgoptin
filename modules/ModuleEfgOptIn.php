@@ -59,11 +59,17 @@ class ModuleEfgOptIn extends \Module
         if (isset($form) && strlen($token) == '32') {
             $database = \Database::getInstance();
             $form     = $database->prepare(
-                "SELECT optin, optinJumpTo, optinJumpToError, optinTokenField, optinFeedbackField, optinFeedbackTimeField, title  FROM tl_form Where id = ?"
+                "SELECT optin, optinSuccessMessage, optinJumpTo, optinErrorMessage, optinJumpToError, optinTokenField, optinFeedbackField, optinFeedbackTimeField, title  FROM tl_form Where id = ?"
             )->execute((int) $form);
 
             if ($form->numRows == 0) {
-                $this->redirectToFrontendPage($form->optinJumpToError);
+                if ($form->optinErrorMessage) {
+                    $this->Template->messageClass = 'error';
+                    $this->Template->message      = $form->optinErrorMessage;
+                    return;
+                } else {
+                    $this->redirectToFrontendPage($form->optinJumpToError);
+                }
             }
 
             if ($form->optin) {
@@ -78,9 +84,14 @@ class ModuleEfgOptIn extends \Module
                             ->execute($formData->pid, $form->optinFeedbackField)->value;
 
                     if ($optInFieldValue) {
-                        $this->redirectToFrontendPage($form->optinJumpToError);
+                        if ($form->optinErrorMessage) {
+                            $this->Template->messageClass = 'error';
+                            $this->Template->message      = $form->optinErrorMessage;
+                            return;
+                        } else {
+                            $this->redirectToFrontendPage($form->optinJumpToError);
+                        }
                     }
-
                     $feedback = array(
                         'tstamp' => time(),
                         'value'  => '1'
@@ -99,12 +110,31 @@ class ModuleEfgOptIn extends \Module
                         $feedbackTime
                     )->execute($formData->pid, $form->optinFeedbackTimeField);
 
-                    $this->redirectToFrontendPage($form->optinJumpTo);
+                    if ($form->optinSuccessMessage) {
+                        $this->Template->messageClass = 'success';
+                        $this->Template->message      = $form->optinSuccessMessage;
+                        return;
+                    } else {
+                        $this->redirectToFrontendPage($form->optinJumpTo);
+                    }
+
+                } else {
+                    if ($form->optinErrorMessage) {
+                        $this->Template->messageClass = 'error';
+                        $this->Template->message      = $form->optinErrorMessage;
+                        return;
+                    } else {
+                        $this->redirectToFrontendPage($form->optinJumpToError);
+                    }
+                }
+            } else {
+                if ($form->optinErrorMessage) {
+                    $this->Template->messageClass = 'error';
+                    $this->Template->message      = $form->optinErrorMessage;
+                    return;
                 } else {
                     $this->redirectToFrontendPage($form->optinJumpToError);
                 }
-            } else {
-                $this->redirectToFrontendPage($form->optinJumpToError);
             }
         }
     }

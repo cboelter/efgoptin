@@ -29,8 +29,12 @@ $GLOBALS['TL_LANG']['tl_form']['optinFeedbackTimeField'] = array(
     'Zeitstempel Opt-In',
     'Hiddenfield in dem die Uhrzeit und das Datum des Feedback für das Double Opt-In gespeichert wird'
 );
+$GLOBALS['TL_LANG']['tl_form']['optinSuccessMessage']    =
+    array('Erfolgsmeldung Opt-In');
 $GLOBALS['TL_LANG']['tl_form']['optinJumpTo']            =
     array('Weiterleitung Erfolgsseite', 'Zielseite für erfolgreichen Double Opt-In');
+$GLOBALS['TL_LANG']['tl_form']['optinErrorMessage']      =
+    array('Fehlermeldung Opt-In');
 $GLOBALS['TL_LANG']['tl_form']['optinJumpToError']       =
     array('Weiterleitung Fehlerseite', 'Zielseite für fehlgeschlagenen Double Opt-In');
 $GLOBALS['TL_LANG']['tl_form']['optinCondition']         =
