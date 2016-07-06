@@ -14,7 +14,7 @@ Installation
 
 4. Datenbankupdate im Backend von Contao ausführen
 
-Configuration
+Konfiguration
 ---------------------
 
 1. Neues Formular erstellen
@@ -38,3 +38,7 @@ Wenn "Fehlermeldung Opt-In" ausgewählt wird, wird die Meldung auf der selben Se
 wenn "Weiterleitung Fehlerseite" ausgewählt wird, wird der User auf eine separate Seite weitergeleitet.
 
 8. Frontend-Modul "EFG Double Opt-In Reader" auf der selben Seite wie das Formular einbinden.
+
+Hinweise
+---------------------
+1. Wenn ein HTML-Template verwendet werden soll, muss dieses im templates-Ordner von Contao abgelegt werden.
