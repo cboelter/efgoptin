@@ -72,7 +72,7 @@ class EfgOptIn
 
             $mailTemplate = $form['optinEmailTemplate'];
             if ($mailTemplate != '') {
-                $fileTemplate = new \BackendTemplate($mailTemplate);
+                $fileTemplate = new \FrontendTemplate($mailTemplate);
 
                 if ($fileTemplate) {
                     $fileTemplate->title = $subject;
