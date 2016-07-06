@@ -60,7 +60,6 @@ class EfgOptIn
         unset($data['FORM_SUBMIT'], $data['MAX_FILE_SIZE']);
 
         if ($data[$form['optinEmailField']]) {
-
             $email  = new \Email();
             $strUrl = \Environment::get('base') . \Controller::generateFrontendUrl($GLOBALS['objPage']->row());
 
@@ -73,13 +72,12 @@ class EfgOptIn
 
             $mailTemplate = $form['optinEmailTemplate'];
             if ($mailTemplate != '') {
-                $fileTemplate = new \File($mailTemplate);
+                $fileTemplate = new \BackendTemplate($mailTemplate);
 
-                if ($fileTemplate->mime == 'text/html') {
-                    $html = $fileTemplate->getContent();
-
-                    $html        = \StringUtil::parseSimpleTokens($html, $data);
-                    $email->html = $html;
+                if ($fileTemplate) {
+                    $fileTemplate->title = $subject;
+                    $fileTemplate->body  = \StringUtil::parseSimpleTokens($form['optinEmailHtml'], $data);
+                    $email->html         = $fileTemplate->parse();
                 }
             }
 
@@ -87,9 +85,9 @@ class EfgOptIn
             $email->text    = $text;
             $email->sendTo($arrSubmitted[$form['optinEmailField']]);
 
-            $arrSubmitted[$form['optinTokenField']]    = $token;
-            $arrSubmitted[$form['optinFeedbackField']] = '';
-            $arrSubmitted[$form['optinFeedbackTimeField']]  = '';
+            $arrSubmitted[$form['optinTokenField']]        = $token;
+            $arrSubmitted[$form['optinFeedbackField']]     = '';
+            $arrSubmitted[$form['optinFeedbackTimeField']] = '';
         }
 
         return $arrSubmitted;

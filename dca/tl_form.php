@@ -28,7 +28,7 @@ array_insert(
     $GLOBALS['TL_DCA']['tl_form']['subpalettes'],
     count($GLOBALS['TL_DCA']['tl_form']['subpalettes']),
     array(
-        'optin'          => 'optinEmailField,optinEmailSender,optinEmailReply,optinEmailSubject,optinEmailText,optinEmailTemplate,optinTokenField,optinFeedbackField,optinFeedbackTimeField,optinSuccessMessage,optinJumpTo,optinErrorMessage,optinJumpToError,optinCondition',
+        'optin'          => 'optinEmailField,optinEmailSender,optinEmailReply,optinEmailSubject,optinEmailText,optinEmailHtml,optinEmailTemplate,optinTokenField,optinFeedbackField,optinFeedbackTimeField,optinSuccessMessage,optinJumpTo,optinErrorMessage,optinJumpToError,optinCondition',
         'optinCondition' => 'optinConditionField'
     )
 );
@@ -93,6 +93,15 @@ $GLOBALS['TL_DCA']['tl_form']['fields']['optinEmailText'] = array
     'sql'       => "text NOT NULL"
 );
 
+$GLOBALS['TL_DCA']['tl_form']['fields']['optinEmailHtml'] = array
+(
+    'label'     => &$GLOBALS['TL_LANG']['tl_form']['optinEmailHtml'],
+    'exclude'   => true,
+    'inputType' => 'textarea',
+    'eval'      => array('tl_class' => 'long', 'allowHtml' => true, 'rte' => 'tinyMce'),
+    'sql'       => "text NOT NULL"
+);
+
 $GLOBALS['TL_DCA']['tl_form']['fields']['optinEmailTemplate'] = array
 (
     'label'            => &$GLOBALS['TL_LANG']['tl_form']['optinEmailTemplate'],
@@ -100,9 +109,7 @@ $GLOBALS['TL_DCA']['tl_form']['fields']['optinEmailTemplate'] = array
     'inputType'        => 'select',
     'options_callback' => array('tl_form_efg_optin', 'getMailTemplates'),
     'eval'             => array(
-        'helpwizard' => false,
-        'files'      => true,
-        'fieldType'  => 'radio',
+        'includeBlankOption' => true
     ),
     'sql'              => "varchar(255) NOT NULL default ''"
 );
