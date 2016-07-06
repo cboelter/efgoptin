@@ -95,17 +95,16 @@ $GLOBALS['TL_DCA']['tl_form']['fields']['optinEmailText'] = array
 
 $GLOBALS['TL_DCA']['tl_form']['fields']['optinEmailTemplate'] = array
 (
-    'label'     => &$GLOBALS['TL_LANG']['tl_form']['optinEmailTemplate'],
-    'exclude'   => true,
-    'inputType' => 'fileTree',
-    'eval'      => array(
+    'label'            => &$GLOBALS['TL_LANG']['tl_form']['optinEmailTemplate'],
+    'exclude'          => true,
+    'inputType'        => 'select',
+    'options_callback' => array('tl_form_efg_optin', 'getMailTemplates'),
+    'eval'             => array(
         'helpwizard' => false,
         'files'      => true,
         'fieldType'  => 'radio',
-        'extensions' => 'htm,html,xhtml,txt,tpl',
-        'path'       => $GLOBALS['TL_CONFIG']['uploadPath'] ? $GLOBALS['TL_CONFIG']['uploadPath'] : 'tl_files'
     ),
-    'sql'       => "varchar(255) NOT NULL default ''"
+    'sql'              => "varchar(255) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_form']['fields']['optinTokenField'] = array
@@ -201,7 +200,7 @@ $GLOBALS['TL_DCA']['tl_form']['fields']['optinConditionField'] = array
 /**
  * Class tl_form_efg_optin
  */
-class tl_form_efg_optin
+class tl_form_efg_optin extends \Backend
 {
 
     /**
@@ -246,5 +245,15 @@ class tl_form_efg_optin
         }
 
         return $fields;
+    }
+
+    /**
+     * Return all mail templates as array
+     *
+     * @return array
+     */
+    public function getMailTemplates()
+    {
+        return $this->getTemplateGroup('mail_');
     }
 }
