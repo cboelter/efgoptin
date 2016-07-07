@@ -20,7 +20,7 @@ $GLOBALS['TL_LANG']['tl_form']['optinEmailSender']       = array('Absender', '')
 $GLOBALS['TL_LANG']['tl_form']['optinEmailReply']        = array('Antwort-Adresse', '');
 $GLOBALS['TL_LANG']['tl_form']['optinEmailSubject']      = array('Betreff', '');
 $GLOBALS['TL_LANG']['tl_form']['optinEmailText']         = array('Text-Inhalt', '');
-$GLOBALS['TL_LANG']['tl_form']['optinEmailText']         = array('HTML-Inhalt', '');
+$GLOBALS['TL_LANG']['tl_form']['optinEmailHtml']         = array('HTML-Inhalt', '');
 $GLOBALS['TL_LANG']['tl_form']['optinEmailTemplate']     = array('Mail-Template HTML', '');
 $GLOBALS['TL_LANG']['tl_form']['optinTokenField']        =
     array('Token-Feld', 'Hiddenfield in dem der Token für das Double Opt-In gespeichert wird');
