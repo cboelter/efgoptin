@@ -98,7 +98,7 @@ $GLOBALS['TL_DCA']['tl_form']['fields']['optinEmailHtml'] = array
     'label'     => &$GLOBALS['TL_LANG']['tl_form']['optinEmailHtml'],
     'exclude'   => true,
     'inputType' => 'textarea',
-    'eval'      => array('tl_class' => 'long', 'allowHtml' => true, 'rte' => 'tinyMce'),
+    'eval'      => array('tl_class' => 'long', 'allowHtml' => true, 'rte' => 'tinyMCE'),
     'sql'       => "text NOT NULL"
 );
 
