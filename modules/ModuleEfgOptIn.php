@@ -15,6 +15,8 @@
 
 namespace Cboelter\EfgOptIn;
 
+use Haste\Util\StringUtil;
+
 class ModuleEfgOptIn extends \Module
 {
 
@@ -59,17 +61,11 @@ class ModuleEfgOptIn extends \Module
         if (isset($form) && strlen($token) == '32') {
             $database = \Database::getInstance();
             $form     = $database->prepare(
-                "SELECT optin, optinSuccessMessage, optinJumpTo, optinErrorMessage, optinJumpToError, optinTokenField, optinFeedbackField, optinFeedbackTimeField, title  FROM tl_form Where id = ?"
+                "SELECT optin, optinSuccessNotification, optinSuccessMessage, optinJumpTo, optinErrorMessage, optinJumpToError, optinTokenField, optinFeedbackField, optinFeedbackTimeField, title  FROM tl_form Where id = ?"
             )->execute((int) $form);
 
             if ($form->numRows == 0) {
-                if ($form->optinErrorMessage) {
-                    $this->Template->messageClass = 'error';
-                    $this->Template->message      = $form->optinErrorMessage;
-                    return;
-                } else {
-                    $this->redirectToFrontendPage($form->optinJumpToError);
-                }
+                $this->generateOptInError($form);
             }
 
             if ($form->optin) {
@@ -84,33 +80,37 @@ class ModuleEfgOptIn extends \Module
                             ->execute($formData->pid, $form->optinFeedbackField)->value;
 
                     if ($optInFieldValue) {
-                        if ($form->optinErrorMessage) {
-                            $this->Template->messageClass = 'error';
-                            $this->Template->message      = $form->optinErrorMessage;
-                            return;
-                        } else {
-                            $this->redirectToFrontendPage($form->optinJumpToError);
-                        }
+                        $this->generateOptInError($form);
                     }
                     $feedback = array(
                         'tstamp' => time(),
                         'value'  => '1'
                     );
 
-                    $database->prepare("UPDATE tl_formdata_details %s Where pid = ? AND ff_name = ?")->set(
-                        $feedback
-                    )->execute($formData->pid, $form->optinFeedbackField);
+                    $this->setFormDataDetails($formData->pid, $form->optinFeedbackField, $feedback);
 
                     $feedbackTime = array(
                         'tstamp' => time(),
                         'value'  => time()
                     );
 
-                    $database->prepare("UPDATE tl_formdata_details %s Where pid = ? AND ff_name = ?")->set(
-                        $feedbackTime
-                    )->execute($formData->pid, $form->optinFeedbackTimeField);
+                    $this->setFormDataDetails($formData->pid, $form->optinFeedbackTimeField, $feedbackTime);
 
                     if ($form->optinSuccessMessage) {
+                        $objNotification =
+                            \NotificationCenter\Model\Notification::findByPk($form->optinSuccessNotification);
+                        if (null !== $objNotification) {
+                            $tokens         = array('domain' => \Environment::get('host'));
+                            $formDataValues = $database->prepare(
+                                "SELECT tfds.ff_name, tfds.value FROM tl_formdata_details tfds Where tfds.pid = ?"
+                            )->execute($formData->pid)->fetchAllAssoc();
+
+                            $preparedTokens = $this->prepareTokens($formDataValues, $form->optinFeedbackTimeField);
+
+                            StringUtil::flatten($preparedTokens, 'form', $tokens);
+                            $objNotification->send($tokens);
+                        }
+
                         $this->Template->messageClass = 'success';
                         $this->Template->message      = $form->optinSuccessMessage;
                         return;
@@ -119,23 +119,69 @@ class ModuleEfgOptIn extends \Module
                     }
 
                 } else {
-                    if ($form->optinErrorMessage) {
-                        $this->Template->messageClass = 'error';
-                        $this->Template->message      = $form->optinErrorMessage;
-                        return;
-                    } else {
-                        $this->redirectToFrontendPage($form->optinJumpToError);
-                    }
+                    $this->generateOptInError($form);
                 }
             } else {
-                if ($form->optinErrorMessage) {
-                    $this->Template->messageClass = 'error';
-                    $this->Template->message      = $form->optinErrorMessage;
-                    return;
-                } else {
-                    $this->redirectToFrontendPage($form->optinJumpToError);
-                }
+                $this->generateOptInError($form);
             }
         }
+    }
+
+    /**
+     * Update the form data details inside the tl_formdata_details
+     *
+     * @param $pid
+     * @param $formDataFieldName
+     * @param $values
+     */
+    private function setFormDataDetails($pid, $formDataFieldName, $values)
+    {
+        $database = \Database::getInstance();
+        $database->prepare("UPDATE tl_formdata_details %s Where pid = ? AND ff_name = ?")->set(
+            $values
+        )->execute($pid, $formDataFieldName);
+    }
+
+    /**
+     * Generate the optInError
+     *
+     * @param $form
+     */
+    private function generateOptInError($form)
+    {
+        if ($form->optinErrorMessage) {
+            $this->Template->messageClass = 'error';
+            $this->Template->message      = $form->optinErrorMessage;
+            return;
+        } else {
+            $this->redirectToFrontendPage($form->optinJumpToError);
+        }
+    }
+
+    /**
+     * Prepare the simple tokens for the notification center
+     *
+     * @param $formDataValues
+     * @param $feedbackTimeField
+     *
+     * @return array
+     */
+    private function prepareTokens($formDataValues, $feedbackTimeField)
+    {
+        $tokens = array();
+        foreach ($formDataValues as $value) {
+
+            if (!$value['ff_name'] || !$value['value']) {
+                continue;
+            }
+
+            if (\Validator::isNumeric($value['value']) && $value['ff_name'] == $feedbackTimeField) {
+                $tokens[$value['ff_name']] = \Date::parse($GLOBALS['objPage']->datimFormat, $value['value']);
+            } else {
+                $tokens[$value['ff_name']] = $value['value'];
+            }
+        }
+
+        return $tokens;
     }
 }

@@ -28,7 +28,7 @@ array_insert(
     $GLOBALS['TL_DCA']['tl_form']['subpalettes'],
     count($GLOBALS['TL_DCA']['tl_form']['subpalettes']),
     array(
-        'optin'          => 'optinEmailField,optinEmailSender,optinEmailReply,optinEmailSubject,optinEmailText,optinEmailHtml,optinEmailTemplate,optinTokenField,optinFeedbackField,optinFeedbackTimeField,optinSuccessMessage,optinJumpTo,optinErrorMessage,optinJumpToError,optinCondition',
+        'optin'          => 'optinEmailField,optinTokenField,optinFeedbackField,optinFeedbackTimeField,optinNotification,optinSuccessNotification,optinSuccessMessage,optinJumpTo,optinErrorMessage,optinJumpToError,optinCondition',
         'optinCondition' => 'optinConditionField'
     )
 );
@@ -57,62 +57,6 @@ $GLOBALS['TL_DCA']['tl_form']['fields']['optinEmailField'] = array
     'sql'              => "varchar(255) NOT NULL default ''"
 );
 
-$GLOBALS['TL_DCA']['tl_form']['fields']['optinEmailSender'] = array
-(
-    'label'     => &$GLOBALS['TL_LANG']['tl_form']['optinEmailSender'],
-    'exclude'   => true,
-    'inputType' => 'text',
-    'eval'      => array('mandatory' => true, 'tl_class' => 'w50'),
-    'sql'       => "varchar(255) NOT NULL default ''"
-);
-
-$GLOBALS['TL_DCA']['tl_form']['fields']['optinEmailReply'] = array
-(
-    'label'     => &$GLOBALS['TL_LANG']['tl_form']['optinEmailReply'],
-    'exclude'   => true,
-    'inputType' => 'text',
-    'eval'      => array('mandatory' => true, 'tl_class' => 'w50'),
-    'sql'       => "varchar(255) NOT NULL default ''"
-);
-
-$GLOBALS['TL_DCA']['tl_form']['fields']['optinEmailSubject'] = array
-(
-    'label'     => &$GLOBALS['TL_LANG']['tl_form']['optinEmailSubject'],
-    'exclude'   => true,
-    'inputType' => 'text',
-    'eval'      => array('mandatory' => true, 'tl_class' => 'w50', 'decodeEntities' => true),
-    'sql'       => "varchar(255) NOT NULL default ''"
-);
-
-$GLOBALS['TL_DCA']['tl_form']['fields']['optinEmailText'] = array
-(
-    'label'     => &$GLOBALS['TL_LANG']['tl_form']['optinEmailText'],
-    'exclude'   => true,
-    'inputType' => 'textarea',
-    'eval'      => array('mandatory' => true, 'tl_class' => 'long', 'decodeEntities' => true),
-    'sql'       => "text NOT NULL"
-);
-
-$GLOBALS['TL_DCA']['tl_form']['fields']['optinEmailHtml'] = array
-(
-    'label'     => &$GLOBALS['TL_LANG']['tl_form']['optinEmailHtml'],
-    'exclude'   => true,
-    'inputType' => 'textarea',
-    'eval'      => array('tl_class' => 'long', 'allowHtml' => true, 'rte' => 'tinyMCE'),
-    'sql'       => "text NOT NULL"
-);
-
-$GLOBALS['TL_DCA']['tl_form']['fields']['optinEmailTemplate'] = array
-(
-    'label'            => &$GLOBALS['TL_LANG']['tl_form']['optinEmailTemplate'],
-    'exclude'          => true,
-    'inputType'        => 'select',
-    'options_callback' => array('tl_form_efg_optin', 'getMailTemplates'),
-    'eval'             => array(
-        'includeBlankOption' => true
-    ),
-    'sql'              => "varchar(255) NOT NULL default ''"
-);
 
 $GLOBALS['TL_DCA']['tl_form']['fields']['optinTokenField'] = array
 (
@@ -205,6 +149,29 @@ $GLOBALS['TL_DCA']['tl_form']['fields']['optinConditionField'] = array
 );
 
 /**
+ * Fields
+ */
+$GLOBALS['TL_DCA']['tl_form']['fields']['optinNotification'] = array
+(
+    'label'            => &$GLOBALS['TL_LANG']['tl_form']['optinNotification'],
+    'exclude'          => true,
+    'inputType'        => 'select',
+    'options_callback' => array('tl_form_efg_optin', 'getEfgOptInNotificationChoices'),
+    'eval'             => array('mandatory' => true, 'chosen' => true, 'tl_class' => 'clr w50'),
+    'sql'              => "int(10) unsigned NOT NULL default '0'"
+);
+
+$GLOBALS['TL_DCA']['tl_form']['fields']['optinSuccessNotification'] = array
+(
+    'label'            => &$GLOBALS['TL_LANG']['tl_form']['optinSuccessNotification'],
+    'exclude'          => true,
+    'inputType'        => 'select',
+    'options_callback' => array('tl_form_efg_optin', 'getEfgOptInSuccessNotificationChoices'),
+    'eval'             => array('mandatory' => true, 'chosen' => true, 'tl_class' => 'w50'),
+    'sql'              => "int(10) unsigned NOT NULL default '0'"
+);
+
+/**
  * Class tl_form_efg_optin
  */
 class tl_form_efg_optin extends \Backend
@@ -254,13 +221,34 @@ class tl_form_efg_optin extends \Backend
         return $fields;
     }
 
+    public function getEfgOptInNotificationChoices() {
+        return $this->getNotificationChoicesByType('efgoptin_optin');
+    }
+
+    public function getEfgOptInSuccessNotificationChoices() {
+        return $this->getNotificationChoicesByType('efgoptin_success');
+    }
+
     /**
-     * Return all mail templates as array
+     * Get notification choices by type
      *
      * @return array
      */
-    public function getMailTemplates()
+    private function getNotificationChoicesByType($type)
     {
-        return $this->getTemplateGroup('mail_');
+        if (!$type) {
+            return array();
+        }
+
+        $arrChoices       = array();
+        $objNotifications = \Database::getInstance()->prepare(
+            "SELECT id,title FROM tl_nc_notification WHERE type=? ORDER BY title"
+        )->execute($type);
+
+        while ($objNotifications->next()) {
+            $arrChoices[$objNotifications->id] = $objNotifications->title;
+        }
+
+        return $arrChoices;
     }
 }
