@@ -27,7 +27,7 @@ Konfiguration
 
 4. Die Felder entsprechend ausfüllen
 
-5. Als Platzhalter für den Opt-In Link kann ```##optinurl##``` verwendet werden
+5. Im Benachrichtigungscenter, neue Benachrichtigungen vom Typ: EFG-OptIn > OptIn Benachrichtigung, EFG-OptIn > OptIn Bestätigung erfolgreich
 
 6. Die Felder "Erfolgsmeldung Opt-In" und "Weiterleitung Erfolgsseite" sind als entweder oder zu verstehen.
 Wenn "Erfolgsmeldung Opt-In" ausgewählt wird, wird die Meldung auf der selben Seite angezeigt,
