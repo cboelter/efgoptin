@@ -21,7 +21,7 @@ $GLOBALS['TL_HOOKS']['processEfgFormData'][] = array('Cboelter\\EfgOptIn\\EfgOpt
 /**
  * Cronjobs
  */
-$GLOBALS['TL_CRON']['minutely'][] = array('Cboelter\\EfgOptIn\\EfgOptIn', 'cleanExpiredOptIn');
+$GLOBALS['TL_CRON']['hourly'][] = array('Cboelter\\EfgOptIn\\EfgOptIn', 'cleanExpiredOptIn');
 
 /**
  * Frontend Modules
