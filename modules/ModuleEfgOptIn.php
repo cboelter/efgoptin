@@ -66,6 +66,7 @@ class ModuleEfgOptIn extends \Module
 
             if ($form->numRows == 0) {
                 $this->generateOptInError($form);
+                return;
             }
 
             if ($form->optin) {
@@ -76,11 +77,14 @@ class ModuleEfgOptIn extends \Module
                 if ($formData->numRows > 0) {
 
                     $optInFieldValue =
-                        $database->prepare("SELECT tfd.value FROM tl_formdata_details tfd Where tfd.pid = ? AND tfd.ff_name = ?")
+                        $database->prepare(
+                            "SELECT tfd.value FROM tl_formdata_details tfd Where tfd.pid = ? AND tfd.ff_name = ?"
+                        )
                             ->execute($formData->pid, $form->optinFeedbackField)->value;
 
                     if ($optInFieldValue) {
                         $this->generateOptInError($form);
+                        return;
                     }
 
                     $feedback = array(
@@ -97,21 +101,21 @@ class ModuleEfgOptIn extends \Module
 
                     $this->setFormDataDetails($formData->pid, $form->optinFeedbackTimeField, $feedbackTime);
 
+                    $objNotification =
+                        \NotificationCenter\Model\Notification::findByPk($form->optinSuccessNotification);
+                    if (null !== $objNotification) {
+                        $tokens         = array('domain' => \Environment::get('host'));
+                        $formDataValues = $database->prepare(
+                            "SELECT tfds.ff_name, tfds.value FROM tl_formdata_details tfds Where tfds.pid = ?"
+                        )->execute($formData->pid)->fetchAllAssoc();
+
+                        $preparedTokens = $this->prepareTokens($formDataValues, $form->optinFeedbackTimeField);
+
+                        StringUtil::flatten($preparedTokens, 'form', $tokens);
+                        $objNotification->send($tokens);
+                    }
+
                     if ($form->optinSuccessMessage) {
-                        $objNotification =
-                            \NotificationCenter\Model\Notification::findByPk($form->optinSuccessNotification);
-                        if (null !== $objNotification) {
-                            $tokens         = array('domain' => \Environment::get('host'));
-                            $formDataValues = $database->prepare(
-                                "SELECT tfds.ff_name, tfds.value FROM tl_formdata_details tfds Where tfds.pid = ?"
-                            )->execute($formData->pid)->fetchAllAssoc();
-
-                            $preparedTokens = $this->prepareTokens($formDataValues, $form->optinFeedbackTimeField);
-
-                            StringUtil::flatten($preparedTokens, 'form', $tokens);
-                            $objNotification->send($tokens);
-                        }
-
                         $this->Template->messageClass = 'success';
                         $this->Template->message      = $form->optinSuccessMessage;
                         return;
@@ -121,9 +125,11 @@ class ModuleEfgOptIn extends \Module
 
                 } else {
                     $this->generateOptInError($form);
+                    return;
                 }
             } else {
                 $this->generateOptInError($form);
+                return;
             }
         }
     }
