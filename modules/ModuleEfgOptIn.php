@@ -76,12 +76,13 @@ class ModuleEfgOptIn extends \Module
                 if ($formData->numRows > 0) {
 
                     $optInFieldValue =
-                        $database->prepare("SELECT value FROM tl_formdata_details Where pid = ? AND ff_name = ?")
+                        $database->prepare("SELECT tfd.value FROM tl_formdata_details tfd Where tfd.pid = ? AND tfd.ff_name = ?")
                             ->execute($formData->pid, $form->optinFeedbackField)->value;
 
                     if ($optInFieldValue) {
                         $this->generateOptInError($form);
                     }
+
                     $feedback = array(
                         'tstamp' => time(),
                         'value'  => '1'
